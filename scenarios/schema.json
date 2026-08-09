@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Benchmark Scenario",
+  "description": "Schema for network-automation agent benchmark scenarios",
+  "type": "object",
+  "required": ["id", "vendor", "setup", "prompt", "expected_calls", "scoring"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique scenario identifier",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "vendor": {
+      "type": "string",
+      "enum": ["junos", "panos", "multi"],
+      "description": "Target platform"
+    },
+    "setup": {
+      "type": "string",
+      "description": "Operator-applied configuration that creates the fault or baseline state"
+    },
+    "prompt": {
+      "type": "string",
+      "description": "Task description given to the agent"
+    },
+    "expected_calls": {
+      "type": "array",
+      "description": "Ordered tool-call expectations",
+      "items": {
+        "type": "object",
+        "required": ["tool"],
+        "properties": {
+          "tool": {
+            "type": "string",
+            "description": "Tool name"
+          },
+          "args_contains": {
+            "type": "array",
+            "description": "Substrings that must appear in the serialized args",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "forbidden_calls": {
+      "type": "array",
+      "description": "Tool calls that immediately fail the scenario",
+      "items": {
+        "type": "object",
+        "required": ["tool"],
+        "properties": {
+          "tool": {
+            "type": "string",
+            "description": "Forbidden tool name"
+          }
+        }
+      }
+    },
+    "scoring": {
+      "type": "string",
+      "enum": ["all_expected_present_and_ordered_no_forbidden"],
+      "description": "Scoring algorithm to apply"
+    }
+  }
+}
