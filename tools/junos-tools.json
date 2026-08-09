@@ -1,0 +1,57 @@
+[
+  {
+    "name": "get_junos_config",
+    "description": "Retrieve current Junos configuration from a device. PLACEHOLDER: replace with real export from rust-junosmcp in Task 3.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "device": {
+          "type": "string",
+          "description": "Device hostname or identifier"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["text", "set", "json"],
+          "description": "Configuration format"
+        }
+      },
+      "required": ["device"]
+    }
+  },
+  {
+    "name": "prepare_change_set",
+    "description": "Stage a configuration change without applying it. PLACEHOLDER: replace with real export from rust-junosmcp in Task 3.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "device": {
+          "type": "string",
+          "description": "Device hostname or identifier"
+        },
+        "changes": {
+          "type": "string",
+          "description": "Configuration commands to stage"
+        }
+      },
+      "required": ["device", "changes"]
+    }
+  },
+  {
+    "name": "apply_change_set",
+    "description": "Commit a previously staged change set. PLACEHOLDER: replace with real export from rust-junosmcp in Task 3.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "device": {
+          "type": "string",
+          "description": "Device hostname or identifier"
+        },
+        "change_set_id": {
+          "type": "string",
+          "description": "ID of the staged change set"
+        }
+      },
+      "required": ["device", "change_set_id"]
+    }
+  }
+]
