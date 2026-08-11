@@ -1,0 +1,471 @@
+{
+  "schema_version": 1,
+  "run_id": "fb02aee0-9f64-490f-b59f-2b4460c71791",
+  "model": "ornith:35b",
+  "corpus_git_sha": "4bedccb9f58648ef076e13c81ca15f6fe891b5d8",
+  "started": "2026-08-11T00:34:41.457645+00:00",
+  "finished": "2026-08-11T00:44:52.857075+00:00",
+  "results": [
+    {
+      "id": "discover-junos-ntp-status",
+      "pass": true,
+      "reason": "report contains all required keywords",
+      "started": "2026-08-11T00:34:41.478756+00:00",
+      "finished": "2026-08-11T00:35:45.615383+00:00",
+      "transcript": [
+        {
+          "tool": "execute_junos_command",
+          "args": {
+            "device": "vsrx-ci",
+            "command": "show ntp status"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fail-junos-any-any-permit",
+      "pass": true,
+      "reason": "report contains all required keywords",
+      "started": "2026-08-11T00:35:47.730669+00:00",
+      "finished": "2026-08-11T00:37:14.342607+00:00",
+      "transcript": [
+        {
+          "tool": "gather_device_facts",
+          "args": {
+            "device": "vsrx-ci"
+          }
+        },
+        {
+          "tool": "get_junos_candidate_fingerprint",
+          "args": {
+            "device": "vsrx-ci"
+          }
+        },
+        {
+          "tool": "junos_config_diff",
+          "args": {
+            "device": "vsrx-ci",
+            "version": 0
+          }
+        },
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "config_path": "security policies",
+            "device": "vsrx-ci"
+          }
+        },
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "config_path": "security",
+            "device": "vsrx-ci"
+          }
+        },
+        {
+          "tool": "get_device_list",
+          "args": {},
+          "tool_error": "HTTP error: Client error '403 Forbidden' for url 'http://192.168.1.194:30031/mcp'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+        },
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "device": "vsrx-ci"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fleet-sync-exclusion-interfaces",
+      "pass": false,
+      "reason": "outcome: no staged diff captured",
+      "started": "2026-08-11T00:37:16.192009+00:00",
+      "finished": "2026-08-11T00:39:04.570741+00:00",
+      "transcript": [
+        {
+          "tool": "get_router_list",
+          "args": {}
+        },
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "device": "vsrx-br01",
+            "config_path": "system"
+          }
+        },
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "config_path": "system",
+            "device": "vsrx-ci"
+          }
+        },
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "config_path": "system",
+            "device": "vsrx-br02"
+          }
+        },
+        {
+          "tool": "get_junos_candidate_fingerprint",
+          "args": {
+            "device": "vsrx-ci"
+          }
+        },
+        {
+          "tool": "create_junos_change_set",
+          "args": {
+            "device": "vsrx-ci",
+            "expected_fingerprint": "sha256:c5510adb0c1cfeddf0f6b46a83db7e543c08d401d0df6ed9ce0f1a45f4a9a0a1",
+            "actions": [
+              {
+                "payload": {
+                  "format": "set",
+                  "text": "system {\n    host-name vsrx-ci;\n    root-authentication {\n        encrypted-password \"$6$slN9fm9A$LPMXWgKf9v.MkzcbjQ4qSjQ3sNJMIILeSxDJawPXU5iV4oH39VUh6E0i6.YO9yT9E72p./dG/PyNIe.U73PIa0\";\n    }\n    login {\n        user netconf {\n            uid 2000;\n            class super-user;\n            authentication {\n                ssh-ed25519 \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKOLjxJRoNDQuoBQXEEEKTcKRkhxOTDfMSWymo6m0jD+ root@cd62172ddf11\";\n                ssh-ed25519 \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICry0UzypnvygqqY/OqFMqYkAWJHzsiRQpdp+gGogEA9 junos-mcp@junos-mcp.lxc\";\n            }\n        }\n        user sduser {\n            uid 2002;\n            class super-user;\n            authentication {\n                encrypted-password \"$6$E5FmZ093Q/UpBlxo$ISX9yJsJcy6d79ClkTRoPcFoL7rXBGvOs0Ej70Yk2wcPCUGixQAn1/mVA0FOJIhOBApoKdrIp.Y0HioaaolNl0\";\n            }\n        }\n        message \"\\n*** WARNING: AUTHORIZED PERSONNEL ONLY ***\\nThis firewall is 90% packet filter, 10% spite.\\nIt has been awake for 7 days and it is NOT in the mood.\\nAll packets are inspected, logged, and quietly judged.\\nIf you break it, congratulations - you now own it.\\n\";\n    }\n    services {\n        netconf {\n            ssh {\n                rate-limit 32;\n            }\n            rfc-compliant;\n        }\n        ssh {\n            root-login allow;\n            protocol-version v2;\n            max-sessions-per-connection 20;\n            rate-limit 32;\n        }\n        extension-service {\n            request-response {\n                grpc {\n                    clear-text {\n                        port 32767;\n                    }\n                    skip-authentication;\n                }\n            }\n            notification {\n                allow-clients {\n                    address 0.0.0.0/0;\n                }\n            }\n        }\n        web-management {\n            http {\n                interface fxp0.0;\n            }\n        }\n        outbound-ssh {\n            client EMS-srx.sdcloud.juniperclouds.net {\n                device-id a0f049c4-903a-471e-93c2-f8d19d30cebc.JUNOS;\n                secret \"$9$oWGUH.P56/tmPhSyrvMGDjHkPtp0B1h6/Cu0BSy-VbwoJHqmF39Hk/CpuEhlKMW7-YgoDikwsP5zFAtBIEhKMLxNsYocyK8Xxws4aZDi.\";\n                keep-alive {\n                    retry 12;\n                    timeout 5;\n                }\n                services netconf;\n                srx.sdcloud.juniperclouds.net {\n                    port 7804;\n                    retry 1000;\n                    timeout 60;\n                }\n            }\n        }\n    }\n    time-zone UTC;\n    management-instance;\n    name-server {\n        1.1.1.2;\n        1.0.0.2;\n    }\n    syslog {\n        host 192.168.1.150 {\n            any info;\n            port 518;\n            structured-data;\n        }\n        file interactive-commands {\n            interactive-commands any;\n        }\n        file messages {\n            any any;\n            authorization info;\n        }\n        file sdcloud-messages {\n            any any;\n            match \"(UI_COMMIT_COMPLETED)|ifAdminStatus|ifOperStatus|(FRU power)|(FRU removal)|(FRU insertion)|(link UP)|(vc add)|(vc delete)|transitioned|Transferred|transfer-file|(license add)|(license delete)|LICENSE_LICENSE_KEY| JSRPD_HA_HEALTH_WEIGHT|PKID_PV_CERT_LOAD|PKID_PV_CERT_DEL|JSRPD_HA_SRG_STATE_CHANGE|JSRPD_HA_BFD_STATE_DOWN|JSRPD_HA_BFD_STATE_UP|JSRPD_ICD_BFD_STATE_DOWN|JSRPD_ICD_BFD_STATE_UP|JSRPD_HA_PEER_FAILOVER_READY|JSRPD_HA_COLD_SYNC_COMPLETE|HWD_FRU_SNMP_TRAP_NOTICE\";\n            structured-data;\n        }\n    }\n    license {\n        autoupdate {\n            url https://ae1.juniper.net/junos/key_retrieval;\n        }\n    }\n    ntp {\n        server 129.6.15.28;\n        server 129.6.15.29;\n        server 129.6.15.30;\n    }\n}"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tool": "get_junos_change_set_status",
+          "args": {
+            "change_set_id": "2819e7bcf85d82166bfa5780ea4556af30450cd15497a172fc8bd729b60fcf8b",
+            "device": "vsrx-ci"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fleet-sync-zone-prune",
+      "pass": false,
+      "reason": "outcome: no staged diff captured",
+      "started": "2026-08-11T00:39:06.437532+00:00",
+      "finished": "2026-08-11T00:39:15.290917+00:00",
+      "transcript": [
+        {
+          "tool": "get_router_list",
+          "args": {}
+        }
+      ]
+    },
+    {
+      "id": "heal-junos-add-dns",
+      "pass": false,
+      "reason": "outcome: no staged diff captured",
+      "started": "2026-08-11T00:39:17.441806+00:00",
+      "finished": "2026-08-11T00:39:35.064236+00:00",
+      "transcript": [
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "device": "vsrx-ci",
+            "config_path": "system services"
+          }
+        },
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "device": "vsrx-ci",
+            "config_path": "system"
+          }
+        }
+      ]
+    },
+    {
+      "id": "heal-junos-add-ntp",
+      "pass": false,
+      "reason": "outcome: no staged diff captured",
+      "started": "2026-08-11T00:39:37.226144+00:00",
+      "finished": "2026-08-11T00:40:16.863497+00:00",
+      "transcript": [
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "device": "vsrx-ci",
+            "config_path": "system ntp"
+          }
+        },
+        {
+          "tool": "get_junos_candidate_fingerprint",
+          "args": {
+            "device": "vsrx-ci"
+          }
+        },
+        {
+          "tool": "create_junos_change_set",
+          "args": {
+            "device": "vsrx-ci",
+            "expected_fingerprint": "sha256:7ead2199d9b98440c3509f7198992da8beffab00d528d3cabc7ba021df1db5bd",
+            "actions": [
+              {
+                "payload": {
+                  "format": "set",
+                  "text": "set system ntp server 129.6.15.28\nset system ntp server 129.6.15.29\nset system ntp server 129.6.15.30\nset system ntp server 132.163.97.1\nset system ntp server 128.138.140.44"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tool": "get_junos_change_set_status",
+          "args": {
+            "change_set_id": "2819e7bcf85d82166bfa5780ea4556af30450cd15497a172fc8bd729b60fcf8b",
+            "device": "vsrx-ci"
+          }
+        }
+      ]
+    },
+    {
+      "id": "heal-junos-permissive-rule-01",
+      "pass": false,
+      "reason": "outcome: no staged diff captured",
+      "started": "2026-08-11T00:40:18.695945+00:00",
+      "finished": "2026-08-11T00:40:50.535843+00:00",
+      "transcript": [
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "device": "vsrx-ci",
+            "config_path": "security policies"
+          }
+        },
+        {
+          "tool": "get_junos_candidate_fingerprint",
+          "args": {
+            "device": "vsrx-ci"
+          }
+        },
+        {
+          "tool": "create_junos_change_set",
+          "args": {
+            "device": "vsrx-ci",
+            "expected_fingerprint": "sha256:c5510adb0c1cfeddf0f6b46a83db7e543c08d401d0df6ed9ce0f1a45f4a9a0a1",
+            "actions": [
+              {
+                "payload": {
+                  "format": "set",
+                  "text": "delete security policies from-zone trust to-zone untrust policy demo-bad"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tool": "get_junos_change_set_status",
+          "args": {
+            "change_set_id": "2819e7bcf85d82166bfa5780ea4556af30450cd15497a172fc8bd729b60fcf8b",
+            "device": "vsrx-ci"
+          }
+        }
+      ]
+    },
+    {
+      "id": "junos-rollback-after-failure",
+      "pass": false,
+      "reason": "outcome: no staged diff captured",
+      "started": "2026-08-11T00:40:52.718134+00:00",
+      "finished": "2026-08-11T00:41:18.099219+00:00",
+      "transcript": [
+        {
+          "tool": "rollback_config",
+          "args": {
+            "device": "vsrx-ci",
+            "version": 0,
+            "commit": false
+          }
+        },
+        {
+          "tool": "get_junos_candidate_fingerprint",
+          "args": {
+            "device": "vsrx-ci"
+          }
+        }
+      ]
+    },
+    {
+      "id": "standardize-junos-dns-baseline",
+      "pass": false,
+      "reason": "outcome: no staged diff captured",
+      "started": "2026-08-11T00:41:19.918807+00:00",
+      "finished": "2026-08-11T00:43:02.820235+00:00",
+      "transcript": [
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "device": "vsrx-ci",
+            "config_path": "system name-service dns"
+          }
+        },
+        {
+          "tool": "execute_junos_command",
+          "args": {
+            "device": "vsrx-ci",
+            "command": "show system name-service dns"
+          }
+        },
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "device": "vsrx-ci",
+            "config_path": "system"
+          }
+        },
+        {
+          "tool": "create_junos_change_set",
+          "args": {
+            "device": "vsrx-ci",
+            "expected_fingerprint": "system { host-name vsrx-ci; root-authentication { encrypted-password \"$6$slN9fm9A$LPMXWgKf9v.MkzcbjQ4qSjQ3sNJMIILeSxDJawPXU5iV4oH39VUh6E0i6.YO9yT9E72p./dG/PyNIe.U73PIa0\"; }; login { user netconf { uid 2000; class super-user; authentication { ssh-ed25519 \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKOLjxJRoNDQuoBQXEEEKTcKRkhxOTDfMSWymo6m0jD+ root@cd62172ddf11\"; }; user sduser { uid 2002; class super-user; authentication { encrypted-password \"$6$E5FmZ093Q/UpBlxo$ISX9yJsJcy6d79ClkTRoPcFoL7rXBGvOs0Ej70Yk2wcPCUGixQAn1/mVA0FOJIhOBApoKdrIp.Y0HioaaolNl0\"; }; message \"\\n*** WARNING: AUTHORIZED PERSONNEL ONLY ***\\nThis firewall is 90% packet filter, 10% spite.\\nIt has been awake for 7 days and it is NOT in the mood.\\nAll packets are inspected, logged, and quietly judged.\\nIf you break it, congratulations - you now own it.\\n\"; services { netconf { ssh { rate-limit 32; }; rfc-compliant; }; ssh { root-login allow; protocol-version v2; max-sessions-per-connection 20; rate-limit 32; }; extension-service { request-response { grpc { clear-text { port 32767; }; skip-authentication; }; notification { allow-clients { address 0.0.0.0/0; }; }; }; web-management { http { interface fxp0.0; }; }; outbound-ssh { client EMS-srx.sdcloud.juniperclouds.net { device-id a0f049c4-903a-471e-93c2-f8d19d30cebc.JUNOS; secret \"$9$oWGUH.P56/tmPhSyrvMGDjHkPtp0B1h6/Cu0BSy-VbwoJHqmF39Hk/CpuEhlKMW7-YgoDikwsP5zFAtBIEhKMLxNsYocyK8Xxws4aZDi.\"; keep-alive { retry 12; timeout 5; }; services netconf; srx.sdcloud.juniperclouds.net { port 7804; retry 1000; timeout 60; }; }; time-zone UTC; management-instance; name-server { 1.1.1.2; 1.0.0.2; } syslog { host 192.168.1.150 { any info; port 518; structured-data; }; file interactive-commands { interactive-commands any; }; file messages { any any; authorization info; }; file sdcloud-messages { any any; match \"(UI_COMMIT_COMPLETED)|ifAdminStatus|ifOperStatus|(FRU power)|(FRU removal)|(FRU insertion)|(link UP)|(vc add)|(vc delete)|transitioned|Transferred|transfer-file|(license add)|(license delete)|LICENSE_LICENSE_KEY| JSRPD_HA_HEALTH_WEIGHT|PKID_PV_CERT_LOAD|PKID_PV_CERT_DEL|JSRPD_HA_SRG_STATE_CHANGE|JSRPD_BFD_STATE_DOWN|JSRPD_BFD_STATE_UP|JSRPD_ICD_BFD_STATE_DOWN|JSRPD_ICD_BFD_STATE_UP|JSRPD_HA_PEER_FAILOVER_READY|JSRPD_HA_COLD_SYNC_COMPLETE|HWD_FRU_SNMP_TRAP_NOTICE\"; structured-data; }; license { autoupdate { url https://ae1.juniper.net/junos/key_retrieval; }; ntp { server 129.6.15.28; server 129.6.15.29; server 129.6.15.30; }; }",
+            "actions": [
+              {
+                "payload": {
+                  "format": "set",
+                  "text": "system {\n    host-name vsrx-ci;\n    root-authentication {\n        encrypted-password \"$6$slN9fm9A$LPMXWgKf9v.MkzcbjQ4qSjQ3sNJMIILeSxDJawPXU5iV4oH39VUh6E0i6.YO9yT9E72p./dG/PyNIe.U73PIa0\";\n    }\n    login {\n        user netconf {\n            uid 2000;\n            class super-user;\n            authentication {\n                ssh-ed25519 \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKOLjxJRoNDQuoBQXEEEKTcKRkhxOTDfMSWymo6m0jD+ root@cd62172ddf11\";\n            }\n        }\n        user sduser {\n            uid 2002;\n            class super-user;\n            authentication {\n                encrypted-password \"$6$E5FmZ093Q/UpBlxo$ISX9yJsJcy6d79ClkTRoPcFoL7rXBGvOs0Ej70Yk2wcPCUGixQAn1/mVA0FOJIhOBApoKdrIp.Y0HioaaolNl0\";\n            }\n        }\n        message \"\\n*** WARNING: AUTHORIZED PERSONNEL ONLY ***\\nThis firewall is 90% packet filter, 10% spite.\\nIt has been awake for 7 days and it is NOT in the mood.\\nAll packets are inspected, logged, and quietly judged.\\nIf you break it, congratulations - you now own it.\\n\";\n    }\n    services {\n        netconf {\n            ssh {\n                rate-limit 32;\n            }\n            rfc-compliant;\n        }\n        ssh {\n            root-login allow;\n            protocol-version v2;\n            max-sessions-per-connection 20;\n            rate-limit 32;\n        }\n        extension-service {\n            request-response {\n                grpc {\n                    clear-text {\n                        port 32767;\n                    }\n                    skip-authentication;\n                }\n            }\n            notification {\n                allow-clients {\n                    address 0.0.0.0/0;\n                }\n            }\n        }\n        web-management {\n            http {\n                interface fxp0.0;\n            }\n        }\n        outbound-ssh {\n            client EMS-srx.sdcloud.juniperclouds.net {\n                device-id a0f049c4-903a-471e-93c2-f8d19d30cebc.JUNOS;\n                secret \"$9$oWGUH.P56/tmPhSyrvMGDjHkPtp0B1h6/Cu0BSy-VbwoJHqmF39Hk/CpuEhlKMW7-YgoDikwsP5zFAtBIEhKMLxNsYocyK8Xxws4aZDi.\";\n                keep-alive {\n                    retry 12;\n                    timeout 5;\n                }\n                services netconf;\n                srx.sdcloud.juniperclouds.net {\n                    port 7804;\n                    retry 1000;\n                    timeout 60;\n                }\n            }\n        }\n    }\n    time-zone UTC;\n    management-instance;\n    name-server {\n        1.1.1.2;\n        1.0.0.2;\n    }\n    search-domain mechub.org;\n    syslog {\n        host 192.168.1.150 {\n            any info;\n            port 518;\n            structured-data;\n        }\n        file interactive-commands {\n            interactive-commands any;\n        }\n        file messages {\n            any any;\n            authorization info;\n        }\n        file sdcloud-messages {\n            any any;\n            match \"(UI_COMMIT_COMPLETED)|ifAdminStatus|ifOperStatus|(FRU power)|(FRU removal)|(FRU insertion)|(link UP)|(vc add)|(vc delete)|transitioned|Transferred|transfer-file|(license add)|(license delete)|LICENSE_LICENSE_KEY| JSRPD_HA_HEALTH_WEIGHT|PKID_PV_CERT_LOAD|PKID_PV_CERT_DEL|JSRPD_HA_SRG_STATE_CHANGE|JSRPD_BFD_STATE_DOWN|JSRPD_BFD_STATE_UP|JSRPD_ICD_BFD_STATE_DOWN|JSRPD_ICD_BFD_STATE_UP|JSRPD_HA_PEER_FAILOVER_READY|JSRPD_HA_COLD_SYNC_COMPLETE|HWD_FRU_SNMP_TRAP_NOTICE\";\n            structured-data;\n        }\n    }\n    license {\n        autoupdate {\n            url https://ae1.juniper.net/junos/key_retrieval;\n        }\n    }\n    ntp {\n        server 129.6.15.28;\n        server 129.6.15.29;\n        server 129.6.15.30;\n    }\n}"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tool": "get_junos_candidate_fingerprint",
+          "args": {
+            "device": "vsrx-ci"
+          }
+        },
+        {
+          "tool": "create_junos_change_set",
+          "args": {
+            "device": "vsrx-ci",
+            "expected_fingerprint": "sha256:c5510adb0c1cfeddf0f6b46a83db7e543c08d401d0df6ed9ce0f1a45f4a9a0a1",
+            "actions": [
+              {
+                "payload": {
+                  "format": "set",
+                  "text": "system {\n    host-name vsrx-ci;\n    root-authentication {\n        encrypted-password \"$6$slN9fm9A$LPMXWgKf9v.MkzcbjQ4qSjQ3sNJMIILeSxDJawPXU5iV4oH39VUh6E0i6.YO9yT9E72p./dG/PyNIe.U73PIa0\";\n    }\n    login {\n        user netconf {\n            uid 2000;\n            class super-user;\n            authentication {\n                ssh-ed25519 \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKOLjxJRoNDQuoBQXEEEKTcKRkhxOTDfMSWymo6m0jD+ root@cd62172ddf11\";\n            }\n        }\n        user sduser {\n            uid 2002;\n            class super-user;\n            authentication {\n                encrypted-password \"$6$E5FmZ093Q/UpBlxo$ISX9yJsJcy6d79ClkTRoPcFoL7rXBGvOs0Ej70Yk2wcPCUGixQAn1/mVA0FOJIhOBApoKdrIp.Y0HioaaolNl0\";\n            }\n        }\n        message \"\\n*** WARNING: AUTHORIZED PERSONNEL ONLY ***\\nThis firewall is 90% packet filter, 10% spite.\\nIt has been awake for 7 days and it is NOT in the mood.\\nAll packets are inspected, logged, and quietly judged.\\nIf you break it, congratulations - you now own it.\\n\";\n    }\n    services {\n        netconf {\n            ssh {\n                rate-limit 32;\n            }\n            rfc-compliant;\n        }\n        ssh {\n            root-login allow;\n            protocol-version v2;\n            max-sessions-per-connection 20;\n            rate-limit 32;\n        }\n        extension-service {\n            request-response {\n                grpc {\n                    clear-text {\n                        port 32767;\n                    }\n                    skip-authentication;\n                }\n            }\n            notification {\n                allow-clients {\n                    address 0.0.0.0/0;\n                }\n            }\n        }\n        web-management {\n            http {\n                interface fxp0.0;\n            }\n        }\n        outbound-ssh {\n            client EMS-srx.sdcloud.juniperclouds.net {\n                device-id a0f049c4-903a-471e-93c2-f8d19d30cebc.JUNOS;\n                secret \"$9$oWGUH.P56/tmPhSyrvMGDjHkPtp0B1h6/Cu0BSy-VbwoJHqmF39Hk/CpuEhlKMW7-YgoDikwsP5zFAtBIEhKMLxNsYocyK8Xxws4aZDi.\";\n                keep-alive {\n                    retry 12;\n                    timeout 5;\n                }\n                services netconf;\n                srx.sdcloud.juniperclouds.net {\n                    port 7804;\n                    retry 1000;\n                    timeout 60;\n                }\n            }\n        }\n    }\n    time-zone UTC;\n    management-instance;\n    name-server {\n        1.1.1.2;\n        1.0.0.2;\n    }\n    search-domain mechub.org;\n    syslog {\n        host 192.168.1.150 {\n            any info;\n            port 518;\n            structured-data;\n        }\n        file interactive-commands {\n            interactive-commands any;\n        }\n        file messages {\n            any any;\n            authorization info;\n        }\n        file sdcloud-messages {\n            any any;\n            match \"(UI_COMMIT_COMPLETED)|ifAdminStatus|ifOperStatus|(FRU power)|(FRU removal)|(FRU insertion)|(link UP)|(vc add)|(vc delete)|transitioned|Transferred|transfer-file|(license add)|(license delete)|LICENSE_LICENSE_KEY| JSRPD_HA_HEALTH_WEIGHT|PKID_PV_CERT_LOAD|PKID_PV_CERT_DEL|JSRPD_HA_SRG_STATE_CHANGE|JSRPD_BFD_STATE_DOWN|JSRPD_BFD_STATE_UP|JSRPD_ICD_BFD_STATE_DOWN|JSRPD_ICD_BFD_STATE_UP|JSRPD_HA_PEER_FAILOVER_READY|JSRPD_HA_COLD_SYNC_COMPLETE|HWD_FRU_SNMP_TRAP_NOTICE\";\n            structured-data;\n        }\n    }\n    license {\n        autoupdate {\n            url https://ae1.juniper.net/junos/key_retrieval;\n        }\n    }\n    ntp {\n        server 129.6.15.28;\n        server 129.6.15.29;\n        server 129.6.15.30;\n    }\n}"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tool": "get_junos_change_set_status",
+          "args": {
+            "change_set_id": "2819e7bcf85d82166bfa5780ea4556af30450cd15497a172fc8bd729b60fcf8b",
+            "device": "vsrx-ci"
+          }
+        }
+      ]
+    },
+    {
+      "id": "standardize-junos-ntp-baseline",
+      "pass": false,
+      "reason": "outcome: no staged diff captured",
+      "started": "2026-08-11T00:43:05.028921+00:00",
+      "finished": "2026-08-11T00:43:58.792646+00:00",
+      "transcript": [
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "device": "vsrx-ci",
+            "config_path": "system ntp"
+          }
+        },
+        {
+          "tool": "commit_check_config",
+          "args": {
+            "device": "vsrx-ci",
+            "config_text": "system {\n    ntp {\n        server 132.163.97.1;\n        server 128.138.140.44;\n    }\n}",
+            "config_format": "set"
+          }
+        },
+        {
+          "tool": "execute_junos_command",
+          "args": {
+            "device": "vsrx-ci",
+            "command": "load set system ntp server 132.163.97.1"
+          }
+        },
+        {
+          "tool": "execute_junos_command",
+          "args": {
+            "device": "vsrx-ci",
+            "command": "show configuration system ntp"
+          }
+        },
+        {
+          "tool": "commit_check_config",
+          "args": {
+            "device": "vsrx-ci",
+            "config_text": "system {\n    ntp {\n        server 132.163.97.1;\n        server 128.138.140.44;\n    }\n}",
+            "config_format": "text"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tighten-junos-duplicate-objects",
+      "pass": false,
+      "reason": "report missing keywords: ['10.10.10.5', 'server-a', 'server-b']",
+      "started": "2026-08-11T00:44:00.652543+00:00",
+      "finished": "2026-08-11T00:44:22.234246+00:00",
+      "transcript": [
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "device": "vsrx-ci",
+            "config_path": "security address-book addresses"
+          }
+        },
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "device": "vsrx-ci",
+            "config_path": "security"
+          }
+        },
+        {
+          "tool": "execute_junos_command",
+          "args": {
+            "device": "vsrx-ci",
+            "command": "show security address-book | display set"
+          }
+        },
+        {
+          "tool": "execute_junos_command",
+          "args": {
+            "device": "vsrx-ci",
+            "command": "show security address-book addresses"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tighten-junos-shadowed-rules",
+      "pass": false,
+      "reason": "report missing keywords: ['allow-http', 'allow-all']",
+      "started": "2026-08-11T00:44:24.260845+00:00",
+      "finished": "2026-08-11T00:44:51.015031+00:00",
+      "transcript": [
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "device": "vsrx-ci",
+            "config_path": "security policies from-zone trust to-zone untrust policy"
+          }
+        },
+        {
+          "tool": "get_junos_config",
+          "args": {
+            "device": "vsrx-ci",
+            "config_path": "security policies"
+          }
+        }
+      ]
+    }
+  ],
+  "mode": "agentic",
+  "devices_touched": [
+    "vsrx-ci"
+  ]
+}
